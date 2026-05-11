@@ -1,0 +1,217 @@
+import java.util.Scanner;
+import java.util.PriorityQueue;
+
+// =====================
+// Cola Circular
+// =====================
+class ColaCircular {
+    int[] cola;
+    int frente = 0;
+    int fin = -1;
+    int tamaño = 0;
+    int capacidad;
+
+    public ColaCircular(int capacidad) {
+        this.capacidad = capacidad;
+        cola = new int[capacidad];
+    }
+
+    void encolar(int x) {
+        if (tamaño == capacidad) {
+            System.out.println("Cola llena");
+            return;
+        }
+        fin = (fin + 1) % capacidad;
+        cola[fin] = x;
+        tamaño++;
+    }
+
+    int desencolar() {
+        if (tamaño == 0) {
+            System.out.println("Cola vacía");
+            return -1;
+        }
+        int x = cola[frente];
+        frente = (frente + 1) % capacidad;
+        tamaño--;
+        return x;
+    }
+
+    void mostrar() {
+        if (tamaño == 0) {
+            System.out.println("Cola vacía");
+            return;
+        }
+        for (int i = 0; i < tamaño; i++) {
+            System.out.print(cola[(frente + i) % capacidad] + " ");
+        }
+        System.out.println();
+    }
+}
+
+// =====================
+// Cola Lista
+// =====================
+class Nodo {
+    int dato;
+    Nodo sig;
+
+    Nodo(int d) {
+        dato = d;
+    }
+}
+
+class ColaLista {
+    Nodo frente = null;
+    Nodo fin = null;
+
+    void encolar(int x) {
+        Nodo nuevo = new Nodo(x);
+
+        if (frente == null) {
+            frente = fin = nuevo;
+        } else {
+            fin.sig = nuevo;
+            fin = nuevo;
+        }
+    }
+
+    int desencolar() {
+        if (frente == null) {
+            System.out.println("Cola vacía");
+            return -1;
+        }
+        int x = frente.dato;
+        frente = frente.sig;
+        return x;
+    }
+
+    void mostrar() {
+        if (frente == null) {
+            System.out.println("Cola vacía");
+            return;
+        }
+        Nodo temp = frente;
+        while (temp != null) {
+            System.out.print(temp.dato + " ");
+            temp = temp.sig;
+        }
+        System.out.println();
+    }
+}
+
+// =====================
+// MAIN
+// =====================
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        ColaCircular cc = new ColaCircular(10);
+        ColaLista cl = new ColaLista();
+        PriorityQueue<Integer> cp = new PriorityQueue<>();
+
+        int opcion, tipo;
+
+        do {
+            System.out.println("\n===== MENÚ =====");
+            System.out.println("1. Cola Circular");
+            System.out.println("2. Cola Lista");
+            System.out.println("3. Cola Prioridad");
+            System.out.println("4. Salir");
+            System.out.print("Elige: ");
+            tipo = sc.nextInt();
+
+            if (tipo == 4) break;
+
+            do {
+                System.out.println("\n1. Agregar varios números");
+                System.out.println("2. Quitar");
+                System.out.println("3. Volver");
+                System.out.print("Opción: ");
+                opcion = sc.nextInt();
+
+                switch (tipo) {
+
+                    // ================= CIRCULAR =================
+                    case 1:
+                        switch (opcion) {
+
+                            case 1:
+                                System.out.print("¿Cuántos números?: ");
+                                int n1 = sc.nextInt();
+
+                                for (int i = 0; i < n1; i++) {
+                                    System.out.print("Número: ");
+                                    cc.encolar(sc.nextInt());
+                                }
+
+                                cc.mostrar();
+                                break;
+
+                            case 2:
+                                System.out.println("Sale: " + cc.desencolar());
+                                cc.mostrar();
+                                break;
+                        }
+                        break;
+
+                    // ================= LISTA =================
+                    case 2:
+                        switch (opcion) {
+
+                            case 1:
+                                System.out.print("¿Cuántos números?: ");
+                                int n2 = sc.nextInt();
+
+                                for (int i = 0; i < n2; i++) {
+                                    System.out.print("Número: ");
+                                    cl.encolar(sc.nextInt());
+                                }
+
+                                cl.mostrar();
+                                break;
+
+                            case 2:
+                                System.out.println("Sale: " + cl.desencolar());
+                                cl.mostrar();
+                                break;
+                        }
+                        break;
+
+                    // ================= PRIORIDAD =================
+                    case 3:
+                        switch (opcion) {
+
+                            case 1:
+                                System.out.print("¿Cuántos números?: ");
+                                int n3 = sc.nextInt();
+
+                                for (int i = 0; i < n3; i++) {
+                                    System.out.print("Número: ");
+                                    cp.add(sc.nextInt());
+                                }
+
+                                System.out.println(cp);
+                                break;
+
+                            case 2:
+                                if (!cp.isEmpty())
+                                    System.out.println("Sale: " + cp.poll());
+                                else
+                                    System.out.println("Vacía");
+
+                                System.out.println(cp);
+                                break;
+                        }
+                        break;
+                }
+
+            } while (opcion != 3);
+
+        } while (true);
+
+        sc.close();
+    }
+}
